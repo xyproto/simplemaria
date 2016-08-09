@@ -566,7 +566,7 @@ func (h *HashMap) Exists(owner string) (bool, error) {
 	return counter > 0, nil
 }
 
-// Get all owner's for all hash elements
+// Get all owners (not keys, not values) for all hash elements
 func (h *HashMap) GetAll() ([]string, error) {
 	rows, err := h.host.db.Query("SELECT " + ownerCol + " FROM " + h.table)
 	if err != nil {
