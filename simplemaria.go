@@ -43,7 +43,7 @@ const (
 	// The default "username:password@host:port/database" that the database is running at
 	defaultDatabaseServer = ""     // "username:password@server:port/"
 	defaultDatabaseName   = "test" // "main"
-	defaultStringLength   = 65535  // using VARCHAR
+	defaultStringType     = "VARCHAR(65535)"
 	defaultPort           = 3306
 
 	// Requires MySQL >= 5.53 and MariaDB >= ? for utf8mb4
@@ -205,7 +205,7 @@ func (host *Host) Ping() error {
 // Create a new list. Lists are ordered.
 func NewList(host *Host, name string) (*List, error) {
 	l := &List{host, name}
-	if _, err := l.host.db.Exec("CREATE TABLE IF NOT EXISTS " + name + " (id INT PRIMARY KEY AUTO_INCREMENT, " + listCol + " VARCHAR(" + strconv.Itoa(defaultStringLength) + "))"); err != nil {
+	if _, err := l.host.db.Exec("CREATE TABLE IF NOT EXISTS " + name + " (id INT PRIMARY KEY AUTO_INCREMENT, " + listCol + " " + defaultStringType + ")"); err != nil {
 		return nil, err
 	}
 	if Verbose {
@@ -331,7 +331,7 @@ func (l *List) Clear() error {
 // Create a new set
 func NewSet(host *Host, name string) (*Set, error) {
 	s := &Set{host, name}
-	if _, err := s.host.db.Exec("CREATE TABLE IF NOT EXISTS " + name + " (" + setCol + " VARCHAR(" + strconv.Itoa(defaultStringLength) + "))"); err != nil {
+	if _, err := s.host.db.Exec("CREATE TABLE IF NOT EXISTS " + name + " (" + setCol + " " + defaultStringType + ")"); err != nil {
 		return nil, err
 	}
 	if Verbose {
@@ -443,9 +443,8 @@ func (s *Set) Clear() error {
 // Create a new hashmap
 func NewHashMap(host *Host, name string) (*HashMap, error) {
 	h := &HashMap{host, name}
-	sqltype := "VARCHAR(" + strconv.Itoa(defaultStringLength) + ")"
 	// Using three columns: element id, key and value
-	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (%s %s, %s %s, %s %s)", name, ownerCol, sqltype, keyCol, sqltype, valCol, sqltype)
+	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (%s %s, %s %s, %s %s)", name, ownerCol, defaultStringType, keyCol, defaultStringType, valCol, defaultStringType)
 	if _, err := h.host.db.Exec(query); err != nil {
 		return nil, err
 	}
@@ -635,8 +634,7 @@ func (h *HashMap) Clear() error {
 // Create a new key/value
 func NewKeyValue(host *Host, name string) (*KeyValue, error) {
 	kv := &KeyValue{host, name}
-	sqltype := "VARCHAR(" + strconv.Itoa(defaultStringLength) + ")"
-	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (%s %s, %s %s)", name, keyCol, sqltype, valCol, sqltype)
+	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (%s %s, %s %s)", name, keyCol, defaultStringType, valCol, defaultStringType)
 	if _, err := kv.host.db.Exec(query); err != nil {
 		return nil, err
 	}
