@@ -1,10 +1,13 @@
 // Package simplemaria offers a simple way to use a MySQL/MariaDB database.
+// This database backend is interchangable with xyproto/simpleredis and
+// xyproto/simplebolt, since they all use xyproto/pinterface.
 package simplemaria
 
 import (
 	"database/sql"
 	"errors"
 	"fmt"
+	// Use the mysql database driver
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"strconv"
@@ -149,8 +152,8 @@ func New() *Host {
 }
 
 // Should the UTF-8 data be raw, and not hex encoded and compressed?
-func (h *Host) SetRawUTF8(enabled bool) {
-	h.rawUTF8 = enabled
+func (host *Host) SetRawUTF8(enabled bool) {
+	host.rawUTF8 = enabled
 }
 
 // Select a different database. Create the database if needed.
@@ -202,9 +205,7 @@ func (host *Host) Ping() error {
 // Create a new list. Lists are ordered.
 func NewList(host *Host, name string) (*List, error) {
 	l := &List{host, name}
-	// list is the name of the column
 	if _, err := l.host.db.Exec("CREATE TABLE IF NOT EXISTS " + name + " (id INT PRIMARY KEY AUTO_INCREMENT, " + listCol + " VARCHAR(" + strconv.Itoa(defaultStringLength) + "))"); err != nil {
-		// This is more likely to happen at the start of the program, hence the panic.
 		return nil, err
 	}
 	if Verbose {
@@ -218,7 +219,6 @@ func (l *List) Add(value string) error {
 	if !l.host.rawUTF8 {
 		Encode(&value)
 	}
-	// list is the name of the column
 	_, err := l.host.db.Exec("INSERT INTO "+l.table+" ("+listCol+") VALUES (?)", value)
 	return err
 }
@@ -331,7 +331,6 @@ func (l *List) Clear() error {
 // Create a new set
 func NewSet(host *Host, name string) (*Set, error) {
 	s := &Set{host, name}
-	// list is the name of the column
 	if _, err := s.host.db.Exec("CREATE TABLE IF NOT EXISTS " + name + " (" + setCol + " VARCHAR(" + strconv.Itoa(defaultStringLength) + "))"); err != nil {
 		return nil, err
 	}
@@ -657,11 +656,10 @@ func (kv *KeyValue) Set(key, value string) error {
 		// Key does not exist, create it
 		_, err = kv.host.db.Exec("INSERT INTO "+kv.table+" ("+keyCol+", "+valCol+") VALUES (?, ?)", key, value)
 		return err
-	} else {
-		// Key exists, update the value
-		_, err := kv.host.db.Exec("UPDATE "+kv.table+" SET "+valCol+" = ? WHERE "+keyCol+" = ?", value, key)
-		return err
 	}
+	// Key exists, update the value
+	_, err := kv.host.db.Exec("UPDATE "+kv.table+" SET "+valCol+" = ? WHERE "+keyCol+" = ?", value, key)
+	return err
 }
 
 // Get a value given a key
