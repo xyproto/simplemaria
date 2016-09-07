@@ -16,9 +16,10 @@ import (
 
 const (
 	// Version number. Stable API within major version numbers.
-	Version = 2.0
+	Version = 3.0
 )
 
+// Host represents a specific database at a database host
 type Host struct {
 	db      *sql.DB
 	dbname  string
