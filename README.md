@@ -5,7 +5,7 @@ simplemaria
 [![GoDoc](https://godoc.org/github.com/xyproto/simplemaria?status.svg)](http://godoc.org/github.com/xyproto/simplemaria)
 
 
-Easy way to use a MariaDB/MySQL database from Go.
+An easy way to use a MariaDB/MySQL database from Go.
 
 
 Online API Documentation
@@ -22,7 +22,7 @@ Features and limitations
 * Uses the [mysql](https://github.com/go-sql-driver/mysql) package.
 * Modeled after [simpleredis](https://github.com/xyproto/simpleredis).
 * The hash maps behaves like hash maps, but are not backed by actual hashmaps, unlike with [simpleredis](https://github.com/xyproto/simpleredis). This is for keeping compatibility with simpleredis. If performance when scaling up is a concern, simpleredis backed by [redis](https://redis.io) might be a better choice.
-* MariaDB/MySQL normally has issues with variable size UTF-8 strings, for some combinations of characters. This package avoids these problems by compressing and hex encoding the data before storing in the database. This may slow down or speed up the time it takes to access the data, depending on your setup, but it's a safe way to encode *any* string. This behavior is optional and can be disabled with `host.SetRawUTF8(true)`.
+* MariaDB/MySQL normally has issues with variable size UTF-8 strings, even for for some combinations of characters. This package avoids these problems by compressing and hex encoding the data before storing in the database. This may slow down or speed up the time it takes to access the data, depending on your setup, but it's a safe way to encode *any* string. This behavior is optional and can be disabled with `host.SetRawUTF8(true)`, (to just use `utf8mb4`).
 
 
 Sample usage
@@ -91,5 +91,5 @@ Version, license and author
 
 * Version: 2.0
 * License: MIT
-* Author: Alexander F Rødseth &lt;xyproto@archlinux.org&gt;
+* Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
 
