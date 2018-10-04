@@ -16,7 +16,7 @@ import (
 
 const (
 	// Version number. Stable API within major version numbers.
-	Version = 3.0
+	Version = 3.1
 )
 
 // Host represents a specific database at a database host
