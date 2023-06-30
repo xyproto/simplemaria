@@ -1,15 +1,13 @@
 package simplemaria
 
 import (
+	"crypto/sha256"
+	"io"
 	"testing"
 
-	// For testing the storage of bcrypt password hashes
-	"golang.org/x/crypto/bcrypt"
-
-	"crypto/sha256"
-	"github.com/xyproto/cookie"
+	"github.com/xyproto/cookie/v2"
 	"github.com/xyproto/pinterface"
-	"io"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
