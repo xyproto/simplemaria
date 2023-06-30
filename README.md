@@ -85,6 +85,6 @@ A MariaDB/MySQL Database must be up and running locally for `go test` to work.
 Version, license and author
 ---------------------------
 
-* Version: 3.2.0
+* Version: 3.2.1
 * License: BSD-3
 * Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
