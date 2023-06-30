@@ -1,14 +1,14 @@
-# github.com/go-sql-driver/mysql v1.6.0
-## explicit; go 1.10
+# github.com/go-sql-driver/mysql v1.7.1
+## explicit; go 1.13
 github.com/go-sql-driver/mysql
-# github.com/xyproto/cookie v0.0.0-20181220103240-f4de411f45ff
-## explicit
-github.com/xyproto/cookie
+# github.com/xyproto/cookie/v2 v2.2.4
+## explicit; go 1.17
+github.com/xyproto/cookie/v2
 # github.com/xyproto/pinterface v1.5.3
 ## explicit; go 1.8
 github.com/xyproto/pinterface
-# github.com/xyproto/randomstring v0.0.0-20181222003104-0f764aabc45a
-## explicit
+# github.com/xyproto/randomstring v1.0.5
+## explicit; go 1.17
 github.com/xyproto/randomstring
 # golang.org/x/crypto v0.0.0-20190611184440-5c40567a22f8
 ## explicit
