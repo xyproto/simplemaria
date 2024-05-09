@@ -46,10 +46,10 @@ github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/stretchr/testify v1.7.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.8.0 h1:pSgiaMZlXftHpm5L7V1+rVB+AZJydKsMxsQBIJw4PKk=
 github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
-github.com/xyproto/cookie/v2 v2.2.4 h1:McHpNU+5r1jpMxGwCoUCoHQHElrW2wr7cXomBauuJ9I=
-github.com/xyproto/cookie/v2 v2.2.4/go.mod h1:SkeeteOip8UEegYTF4H+WIzrgKVrqh7o0t97i3vymjw=
 github.com/xyproto/cookie/v2 v2.2.5 h1:g4v1/1hpVbacK+PklgzujnUYgGFmT2riz/cZfePD04k=
 github.com/xyproto/cookie/v2 v2.2.5/go.mod h1:SkeeteOip8UEegYTF4H+WIzrgKVrqh7o0t97i3vymjw=
+github.com/xyproto/env/v2 v2.2.5 h1:FNrp56sptc7ebC2QpM8lqKSGEb3UoYUJZZFl4bmcrPs=
+github.com/xyproto/env/v2 v2.2.5/go.mod h1:F81ZEzu15s3TWUZJ1uzBl9iNeq9zcfHvxMkQJaLZUl0=
 github.com/xyproto/pinterface v1.5.3 h1:RKkNT88cwrSqD9hU4cYAO5yeo8srg4TG+74Pcj88iz0=
 github.com/xyproto/pinterface v1.5.3/go.mod h1:X5B5pKE49ak7SpyDh5QvJvLH9cC9XuZNDcl5hEyYc34=
 github.com/xyproto/randomstring v1.0.5 h1:YtlWPoRdgMu3NZtP45drfy1GKoojuR7hmRcnhZqKjWU=

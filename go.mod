@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/go-mysql-org/go-mysql v1.7.0
 	github.com/xyproto/cookie/v2 v2.2.5
+	github.com/xyproto/env/v2 v2.2.5
 	github.com/xyproto/pinterface v1.5.3
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 )

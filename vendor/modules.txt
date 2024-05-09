@@ -18,9 +18,12 @@ github.com/siddontang/go/hack
 ## explicit
 github.com/siddontang/go-log/log
 github.com/siddontang/go-log/loggers
-# github.com/xyproto/cookie/v2 v2.2.4
+# github.com/xyproto/cookie/v2 v2.2.5
 ## explicit; go 1.17
 github.com/xyproto/cookie/v2
+# github.com/xyproto/env/v2 v2.2.5
+## explicit; go 1.19
+github.com/xyproto/env/v2
 # github.com/xyproto/pinterface v1.5.3
 ## explicit; go 1.8
 github.com/xyproto/pinterface
