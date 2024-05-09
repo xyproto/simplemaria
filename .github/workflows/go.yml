@@ -10,27 +10,28 @@ jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
+
     services:
       mariadb:
         image: mariadb:latest
         env:
-          MARIADB_USER: testuser
-          MARIADB_PASSWORD: testpass
-          MARIADB_ROOT_PASSWORD: rootpass
-          MARIADB_DATABASE: testdb
+          MYSQL_ROOT_PASSWORD: rootpass
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpass
+          MYSQL_DATABASE: testdb
         ports:
           - 3306:3306
         options: >-
           --health-cmd="mysqladmin ping --silent"
           --health-interval=10s
           --health-timeout=10s
-          --health-retries=10
+          --health-retries=5
 
     steps:
     - name: Set up Go 1.x
       uses: actions/setup-go@v4
       with:
-        go-version: 1.21
+        go-version: '1.21'  # Make sure the version is a string
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v4
