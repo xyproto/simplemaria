@@ -8,7 +8,7 @@ import (
 	"errors"
 	"fmt"
 	// Use the mysql database driver
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-mysql-org/go-mysql/driver"
 	"log"
 	"strconv"
 	"strings"
