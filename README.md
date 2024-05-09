@@ -1,7 +1,7 @@
 SimpleMaria
 ===========
 
-[![Build Status](https://travis-ci.org/xyproto/simplemaria.svg?branch=master)](https://travis-ci.org/xyproto/simplemaria) [![GoDoc](https://godoc.org/github.com/xyproto/simplemaria?status.svg)](http://godoc.org/github.com/xyproto/simplemaria)
+[![GoDoc](https://godoc.org/github.com/xyproto/simplemaria?status.svg)](http://godoc.org/github.com/xyproto/simplemaria)
 
 An easy way to use a MariaDB/MySQL database from Go.
 
