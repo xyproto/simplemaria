@@ -7,11 +7,13 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+
 	// Use the mysql database driver
-	_ "github.com/go-mysql-org/go-mysql/driver"
 	"log"
 	"strconv"
 	"strings"
+
+	_ "github.com/go-mysql-org/go-mysql/driver"
 )
 
 const (
@@ -42,9 +44,9 @@ type (
 const (
 
 	// The default "username:password@host:port/database" that the database is running at
-	defaultDatabaseServer = ""     // "username:password@server:port/"
-	defaultDatabaseName   = "test" // "main"
-	defaultStringType     = "TEXT" // "VARCHAR(65535)"
+	defaultDatabaseServer = "localhost" // "username:password@server:port/"
+	defaultDatabaseName   = "test"      // "main"
+	defaultStringType     = "TEXT"      // "VARCHAR(65535)"
 	defaultPort           = 3306
 
 	// Requires MySQL >= 5.53 and MariaDB >= ? for utf8mb4
