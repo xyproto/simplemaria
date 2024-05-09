@@ -153,8 +153,9 @@ func TestRawSet(t *testing.T) {
 
 	//host := New() // locally
 	host := NewHost("travis:@127.0.0.1/") // for travis-ci
-	host.SetRawUTF8(true)
 	//host := NewHost("go:go@/main") // laptop
+
+	host.SetRawUTF8(true)
 
 	defer host.Close()
 	set, err := NewSet(host, setname)
