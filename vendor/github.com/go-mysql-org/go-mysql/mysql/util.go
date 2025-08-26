@@ -2,20 +2,23 @@ package mysql
 
 import (
 	"bytes"
+	"cmp"
 	"compress/zlib"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha1"
 	"crypto/sha256"
+	"crypto/sha512"
 	"encoding/binary"
 	"fmt"
 	"io"
 	mrand "math/rand"
 	"runtime"
+	"strconv"
 	"strings"
 	"time"
 
-	"github.com/Masterminds/semver"
+	"filippo.io/edwards25519"
 	"github.com/go-mysql-org/go-mysql/utils"
 	"github.com/pingcap/errors"
 )
@@ -81,6 +84,44 @@ func CalcCachingSha2Password(scramble []byte, password string) []byte {
 	}
 
 	return message1
+}
+
+// Taken from https://github.com/go-sql-driver/mysql/pull/1518
+func CalcEd25519Password(scramble []byte, password string) ([]byte, error) {
+	// Derived from https://github.com/MariaDB/server/blob/d8e6bb00888b1f82c031938f4c8ac5d97f6874c3/plugin/auth_ed25519/ref10/sign.c
+	// Code style is from https://cs.opensource.google/go/go/+/refs/tags/go1.21.5:src/crypto/ed25519/ed25519.go;l=207
+	h := sha512.Sum512([]byte(password))
+
+	s, err := edwards25519.NewScalar().SetBytesWithClamping(h[:32])
+	if err != nil {
+		return nil, err
+	}
+	A := (&edwards25519.Point{}).ScalarBaseMult(s)
+
+	mh := sha512.New()
+	mh.Write(h[32:])
+	mh.Write(scramble)
+	messageDigest := mh.Sum(nil)
+	r, err := edwards25519.NewScalar().SetUniformBytes(messageDigest)
+	if err != nil {
+		return nil, err
+	}
+
+	R := (&edwards25519.Point{}).ScalarBaseMult(r)
+
+	kh := sha512.New()
+	kh.Write(R.Bytes())
+	kh.Write(A.Bytes())
+	kh.Write(scramble)
+	hramDigest := kh.Sum(nil)
+	k, err := edwards25519.NewScalar().SetUniformBytes(hramDigest)
+	if err != nil {
+		return nil, err
+	}
+
+	S := k.MultiplyAdd(k, s, r)
+
+	return append(R.Bytes(), S.Bytes()...), nil
 }
 
 func EncryptPassword(password string, seed []byte, pub *rsa.PublicKey) ([]byte, error) {
@@ -204,8 +245,10 @@ func PutLengthEncodedInt(n uint64) []byte {
 		// handles case n <= 0xffffffffffffffff
 		// using 'default' instead of 'case' to avoid static analysis error
 		// SA4003: every value of type uint64 is <= math.MaxUint64
-		return []byte{0xfe, byte(n), byte(n >> 8), byte(n >> 16), byte(n >> 24),
-			byte(n >> 32), byte(n >> 40), byte(n >> 48), byte(n >> 56)}
+		return []byte{
+			0xfe, byte(n), byte(n >> 8), byte(n >> 16), byte(n >> 24),
+			byte(n >> 32), byte(n >> 40), byte(n >> 48), byte(n >> 56),
+		}
 	}
 }
 
@@ -410,21 +453,46 @@ func ErrorEqual(err1, err2 error) bool {
 	return e1.Error() == e2.Error()
 }
 
+func compareSubVersion(typ, a, b, aFull, bFull string) (int, error) {
+	if a == "" || b == "" {
+		return 0, nil
+	}
+
+	var aNum, bNum int
+	var err error
+
+	if aNum, err = strconv.Atoi(a); err != nil {
+		return 0, fmt.Errorf("cannot parse %s version %s of %s", typ, a, aFull)
+	}
+	if bNum, err = strconv.Atoi(b); err != nil {
+		return 0, fmt.Errorf("cannot parse %s version %s of %s", typ, b, bFull)
+	}
+
+	return cmp.Compare(aNum, bNum), nil
+}
+
+// Compares version triplet strings, ignoring anything past `-` in version.
+// A version string like 8.0 will compare as if third triplet were a wildcard.
+// A version string like 8 will compare as if second & third triplets were wildcards.
 func CompareServerVersions(a, b string) (int, error) {
-	var (
-		aVer, bVer *semver.Version
-		err        error
-	)
+	aNumbers, _, _ := strings.Cut(a, "-")
+	bNumbers, _, _ := strings.Cut(b, "-")
 
-	if aVer, err = semver.NewVersion(a); err != nil {
-		return 0, fmt.Errorf("cannot parse %q as semver: %w", a, err)
+	aMajor, aRest, _ := strings.Cut(aNumbers, ".")
+	bMajor, bRest, _ := strings.Cut(bNumbers, ".")
+
+	if majorCompare, err := compareSubVersion("major", aMajor, bMajor, a, b); err != nil || majorCompare != 0 {
+		return majorCompare, err
 	}
 
-	if bVer, err = semver.NewVersion(b); err != nil {
-		return 0, fmt.Errorf("cannot parse %q as semver: %w", b, err)
+	aMinor, aPatch, _ := strings.Cut(aRest, ".")
+	bMinor, bPatch, _ := strings.Cut(bRest, ".")
+
+	if minorCompare, err := compareSubVersion("minor", aMinor, bMinor, a, b); err != nil || minorCompare != 0 {
+		return minorCompare, err
 	}
 
-	return aVer.Compare(bVer), nil
+	return compareSubVersion("patch", aPatch, bPatch, a, b)
 }
 
 var encodeRef = map[byte]byte{
@@ -443,9 +511,7 @@ func init() {
 	for i := range EncodeMap {
 		EncodeMap[i] = DONTESCAPE
 	}
-	for i := range EncodeMap {
-		if to, ok := encodeRef[byte(i)]; ok {
-			EncodeMap[byte(i)] = to
-		}
+	for k, v := range encodeRef {
+		EncodeMap[k] = v
 	}
 }

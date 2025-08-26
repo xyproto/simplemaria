@@ -30,7 +30,17 @@ type Executer interface {
 
 func (r *Result) Close() {
 	if r.Resultset != nil {
-		r.Resultset.returnToPool()
+		r.returnToPool()
 		r.Resultset = nil
 	}
+}
+
+func (r *Result) HasResultset() bool {
+	if r == nil {
+		return false
+	}
+	if r.Resultset != nil && len(r.Fields) > 0 {
+		return true
+	}
+	return false
 }
