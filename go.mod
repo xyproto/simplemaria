@@ -18,7 +18,7 @@ require (
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/pingcap/errors v0.11.5-0.20250523034308-74f78ae071ee // indirect
 	github.com/pingcap/log v1.1.1-0.20241212030209-7e3ff8601a2a // indirect
-	github.com/pingcap/tidb/pkg/parser v0.0.0-20250826084218-c7c45c2d0ac2 // indirect
+	github.com/pingcap/tidb/pkg/parser v0.0.0-20250902080043-3d9a0eba8037 // indirect
 	github.com/xyproto/randomstring v1.0.5 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
