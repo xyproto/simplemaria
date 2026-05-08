@@ -6,7 +6,6 @@ require (
 	github.com/go-mysql-org/go-mysql v1.15.0
 	github.com/xyproto/cookie/v2 v2.2.7
 	github.com/xyproto/env/v2 v2.5.6
-	github.com/xyproto/pinterface v1.5.4
 	github.com/xyproto/pinterface/v2 v2.1.2
 	golang.org/x/crypto v0.45.0
 )
